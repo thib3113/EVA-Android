@@ -4,5 +4,6 @@
     <string name="hello_world">Bienvenue sur EVA</string>
     <string name="drawer_open">Menu ouvert</string>
     <string name="drawer_close">Menu fermé</string>
+    <string name="no_card">Aucune carte à afficher</string>
     <string name="action_settings">Paramètres</string>
 </resources>

@@ -12,6 +12,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
 
     private Toolbar mToolbar;
     private NavigationDrawerFragment mNavigationDrawerFragment;
+    String[] tab = {"membre1","membre2","membre3","membre4","membre5","membre6","membre7","membre8","membre9","membre10"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,12 +21,26 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
         mToolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);
         setSupportActionBar(mToolbar);
 //        getSupportActionBar().setDisplayShowHomeEnabled(true);
-//c'est un test
-
 
         mNavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.fragment_drawer);
         mNavigationDrawerFragment.setup(R.id.fragment_drawer, (DrawerLayout) findViewById(R.id.drawer), mToolbar);
+
+        //on tente de récupéré qqc
+//        try {
+            Toast.makeText(this, "connection", Toast.LENGTH_LONG).show();
+            System.out.println("connection");
+            ApiCall a = new ApiCall();
+            a.setActivity(this);
+            a.execute();
+
+        //Récuperation de ListView crée
+//        ListView lv = (ListView) findViewById(R.id.widgetList);
+        //création d'un ArrayAdapter
+//        ArrayAdapter arrayadp=new ArrayAdapter(this,  android.R.layout.simple_list_item_1, tab);
+        // associer l'adaptateur à la listeView
+//        lv.setAdapter(arrayadp);
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -35,8 +50,9 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
-        Toast.makeText(this, "Menu item selected -> " + position, Toast.LENGTH_SHORT).show();
     }
+
+
 
     @Override
     public void onBackPressed() {

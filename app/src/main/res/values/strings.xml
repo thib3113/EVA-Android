@@ -3,6 +3,7 @@
     <string name="app_name">EVA</string>
     <string name="hello_world">Welcome on EVA</string>
     <string name="drawer_open">Menu opened</string>
+    <string name="no_card">No card to see</string>
     <string name="drawer_close">Menu closed</string>
     <string name="action_settings">Settings</string>
 </resources>

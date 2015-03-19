@@ -17,23 +17,18 @@
         <android.support.v4.widget.SwipeRefreshLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/container">
-            <ScrollView
+            android:id="@+id/container"
+            android:padding="10dp">
+
+            <!-- A CardView that contains a TextView -->
+            <it.gmariotti.cardslib.library.view.CardListView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:id="@+id/myList"/>
 
-                <TextView
-                    android:text="@string/hello_world"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:gravity="center"
-                    android:id="@+id/text" />
-            </ScrollView>
         </android.support.v4.widget.SwipeRefreshLayout>
-
-            <!-- android:layout_marginTop="?android:attr/actionBarSize"-->
-            <fragment
+        <!-- android:layout_marginTop="?android:attr/actionBarSize"-->
+        <fragment
                 android:id="@+id/fragment_drawer"
                 android:name="fr.thib3113.eva.NavigationDrawerFragment"
                 android:layout_width="@dimen/navigation_drawer_width"
