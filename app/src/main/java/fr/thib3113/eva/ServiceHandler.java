@@ -92,14 +92,12 @@ public class ServiceHandler {
         } catch (UnsupportedEncodingException e) {
             System.out.println("UnsupportedEncodingException");
             e.printStackTrace();
-            response = "{\"status\":false,\"error_code\":503}";
         } catch (ClientProtocolException e) {
             System.out.println("ClientProtocolException");
             e.printStackTrace();
-            response = "{\"status\":false,\"error_code\":503}";
         } catch (IOException e) {
             System.out.println("IOException");
-            response = "{\"status\":false,\"error_code\":503}";
+            e.printStackTrace();
         }
 
         return response;

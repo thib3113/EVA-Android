@@ -111,6 +111,16 @@ public class ApiCall extends AsyncTask<Void, Void, Void> {
         ServiceHandler sh = new ServiceHandler();
         ApiFunction a = new ApiFunction();
         a.execute(0);
+//          //ping api
+//          String jsonStr = sh.makeServiceCall(ApiCall.this.url+"?type=GET&API=PING", ServiceHandler.GET);
+//        try {
+//            jsonObj = new JSONObject(jsonStr);
+//            str = jsonObj.getString("ping");
+//            System.out.println("réponse au ping : "+str);
+//            ApiCall.this.setVersion(jsonObj.getString("version"));
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
 
         return null;
     }
@@ -139,7 +149,7 @@ public class ApiCall extends AsyncTask<Void, Void, Void> {
         else{
             Toast.makeText(activity.getApplicationContext(), out_str, Toast.LENGTH_LONG).show();
         }
-        System.out.println(jsonObj.toString());
+//        System.out.println(jsonObj.toString());
     }
 
     public Activity getActivity() {
