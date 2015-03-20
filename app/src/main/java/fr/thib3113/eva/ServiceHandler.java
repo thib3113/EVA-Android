@@ -1,5 +1,7 @@
 package fr.thib3113.eva;
 
+import android.provider.Settings;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -26,6 +28,8 @@ public class ServiceHandler {
     static String response = null;
     public final static int GET = 1;
     public final static int POST = 2;
+    private String android_id = Settings.Secure.getString(MainActivity.getAppContext().getContentResolver(),
+            Settings.Secure.ANDROID_ID);
 
     public ServiceHandler() {
 
@@ -67,7 +71,7 @@ public class ServiceHandler {
             // Checking http request method type
             if (method == POST) {
                 HttpPost httpPost = new HttpPost(url);
-                // adding post params
+                httpPost.setHeader("USER_AGENT", "android|"+android_id);
                 if (params != null) {
                     httpPost.setEntity(new UrlEncodedFormEntity(params));
                 }
@@ -83,6 +87,7 @@ public class ServiceHandler {
                 }
                 HttpGet httpGet = new HttpGet(url);
 
+                httpGet.setHeader("USER_AGENT", "android|"+android_id);
                 httpResponse = httpClient.execute(httpGet);
 
             }
