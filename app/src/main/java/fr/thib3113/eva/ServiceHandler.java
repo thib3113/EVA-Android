@@ -9,6 +9,9 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
@@ -30,8 +33,8 @@ public class ServiceHandler {
 
     /**
      * Making service call
-     * @url - url to make request
-     * @method - http request method
+     * @param  url - url to make request
+     * @param method - http request method
      * */
     public String makeServiceCall(String url, int method) {
         return this.makeServiceCall(url, method, null);
@@ -39,16 +42,26 @@ public class ServiceHandler {
 
     /**
      * Making service call
-     * @url - url to make request
-     * @method - http request method
-     * @params - http request params
+     * @param url - url to make request
+     * @param method - http request method
+     * @param params - http request params
      * */
     public String makeServiceCall(String url, int method,
                                   List<NameValuePair> params) {
         try {
+            HttpParams httpParameters = new BasicHttpParams();
+            // Set the timeout in milliseconds until a connection is established.
+            // The default value is zero, that means the timeout is not used.
+            int timeoutConnection = 3000;
+            HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection);
+            // Set the default socket timeout (SO_TIMEOUT)
+            // in milliseconds which is the timeout for waiting for data.
+            int timeoutSocket = 5000;
+            HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
+
             // http client
-            DefaultHttpClient httpClient = new DefaultHttpClient();
-            HttpEntity httpEntity = null;
+            DefaultHttpClient httpClient = new DefaultHttpClient(httpParameters);
+            HttpEntity httpEntity;
             HttpResponse httpResponse = null;
 
             // Checking http request method type
@@ -77,11 +90,16 @@ public class ServiceHandler {
             response = EntityUtils.toString(httpEntity);
 
         } catch (UnsupportedEncodingException e) {
+            System.out.println("UnsupportedEncodingException");
             e.printStackTrace();
+            response = "{\"status\":false,\"error_code\":503}";
         } catch (ClientProtocolException e) {
+            System.out.println("ClientProtocolException");
             e.printStackTrace();
+            response = "{\"status\":false,\"error_code\":503}";
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("IOException");
+            response = "{\"status\":false,\"error_code\":503}";
         }
 
         return response;
