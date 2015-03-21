@@ -11,6 +11,7 @@ import android.widget.Toast;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import fr.thib3113.eva.MainActivity;
@@ -27,10 +28,13 @@ public class ApiCall extends AsyncTask<Void, Void, Void> {
     public  String api_url = "http://myraspi.thib3113.fr/EVA/api/v";
     public  String api_version = "1";
 
+
+    public String version = null;
+    public List<String> Widget;
+
     public JSONObject jsonObj;
     public String str = null;
     public ProgressDialog pDialog;
-    public String version = null;
     public MyTts tts;
     public boolean tts_initialized;
     private Map<String, String> result_api;
@@ -108,10 +112,7 @@ public class ApiCall extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... arg0) {
         // Creating service handler class instance
         ApiFunction a = new ApiFunction(this.url);
-        for (String function:functionList){
-            result_api = a.call(function);
-            a.exec(function, result_api);
-        }
+        for (String function:functionList) a.call(this, function);
 
         return null;
     }
@@ -123,8 +124,8 @@ public class ApiCall extends AsyncTask<Void, Void, Void> {
 
         String out_str = "Erreur inconnue";
         System.out.println(result_api);
-        if(result_api.get("version") != null) {
-            out_str = "Votre serveur est en version " + result_api.get("version");
+        if(this.version != null) {
+            out_str = "Connection au serveur réussie";
         }
         else {
             if (!isOnline()) {

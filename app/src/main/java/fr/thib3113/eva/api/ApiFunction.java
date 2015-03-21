@@ -22,26 +22,16 @@ public class ApiFunction {
         this.api_url = api_url;
     }
 
-    protected Map<String,String> call(String requete) {
+    protected Map<String,String> call(ApiCall api ,String requete) {
         Map<String,String> retour = new HashMap<String, String>();
         retour.put("status", "false");
         retour.put("error_code", "503");
 
         switch (requete.toLowerCase()){
             case "ping":
-                pingCall(retour);
-                System.out.println(retour);
+                pingCall(api, retour);
+                pingExec(api, retour);
             break;
-        }
-        return retour;
-    }
-
-    protected Map<String,String> exec(String requete, Map<String,String> retour) {
-
-        switch (requete.toLowerCase()){
-            case "ping":
-                pingExec(retour);
-                break;
         }
         return retour;
     }
@@ -58,9 +48,11 @@ public class ApiFunction {
         }
     }
 
-    private  void pingExec(Map<String, String> retour){}
+    private  void pingExec(ApiCall api, Map<String, String> retour){
+        api.version = retour.get("version");
+    }
 
-    private void pingCall(Map<String, String> retour){
+    private void pingCall(ApiCall api, Map<String, String> retour){
         String str;
 
         ServiceHandler sh = new ServiceHandler();
