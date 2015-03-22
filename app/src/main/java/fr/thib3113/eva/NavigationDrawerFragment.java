@@ -1,6 +1,5 @@
 package fr.thib3113.eva;
 
-import fr.thib3113.eva.*;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
@@ -136,9 +135,9 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
 
     public List<NavigationItem> getMenu() {
         List<NavigationItem> items = new ArrayList<NavigationItem>();
-        items.add(new NavigationItem("item 1", getResources().getDrawable(R.drawable.ic_menu_check)));
-        items.add(new NavigationItem("item 2", getResources().getDrawable(R.drawable.ic_menu_check)));
-        items.add(new NavigationItem("item 3", getResources().getDrawable(R.drawable.ic_menu_check)));
+        items.add(new NavigationItem("Widget List", getResources().getDrawable(R.mipmap.ic_dashboard_grey600_18dp)));
+        items.add(new NavigationItem("Vocal", getResources().getDrawable(R.mipmap.ic_settings_voice_grey600_18dp)));
+        items.add(new NavigationItem("Settings", getResources().getDrawable(R.mipmap.ic_settings_grey600_18dp)));
         return items;
     }
 

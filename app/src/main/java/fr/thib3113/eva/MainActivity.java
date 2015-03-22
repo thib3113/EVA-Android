@@ -57,9 +57,15 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
+        Toast.makeText(this, " item = "+position, Toast.LENGTH_LONG);
     }
-
-
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+////        startActivity(new Intent(this, SettingsActivity.class));
+//        return true;
+////        super.onOptionsItemSelected(item);
+//    }
 
     @Override
     public void onBackPressed() {

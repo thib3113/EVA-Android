@@ -1,5 +1,6 @@
 package fr.thib3113.eva;
 
+
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,9 +11,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
-/**
- * Created by poliveira on 24/10/2014.
- */
+
 public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDrawerAdapter.ViewHolder> {
 
     private List<NavigationItem> mData;
@@ -35,21 +34,14 @@ public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDraw
     @Override
     public NavigationDrawerAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.drawer_row, viewGroup, false);
-        return new ViewHolder(v);
-    }
-
-    @Override
-    public void onBindViewHolder(NavigationDrawerAdapter.ViewHolder viewHolder, final int i) {
-        viewHolder.textView.setText(mData.get(i).getText());
-        viewHolder.textView.setCompoundDrawablesWithIntrinsicBounds(mData.get(i).getDrawable(), null, null, null);
-
+        final ViewHolder viewHolder = new ViewHolder(v);
         viewHolder.itemView.setOnTouchListener(new View.OnTouchListener() {
                                                    @Override
                                                    public boolean onTouch(View v, MotionEvent event) {
 
                                                        switch (event.getAction()) {
                                                            case MotionEvent.ACTION_DOWN:
-                                                               touchPosition(i);
+                                                               touchPosition(viewHolder.getPosition());
                                                                return false;
                                                            case MotionEvent.ACTION_CANCEL:
                                                                touchPosition(-1);
@@ -68,10 +60,18 @@ public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDraw
                                                    @Override
                                                    public void onClick(View v) {
                                                        if (mNavigationDrawerCallbacks != null)
-                                                           mNavigationDrawerCallbacks.onNavigationDrawerItemSelected(i);
+                                                           mNavigationDrawerCallbacks.onNavigationDrawerItemSelected(viewHolder.getPosition());
                                                    }
                                                }
         );
+
+        return viewHolder;
+    }
+
+    @Override
+    public void onBindViewHolder(NavigationDrawerAdapter.ViewHolder viewHolder, final int i) {
+        viewHolder.textView.setText(mData.get(i).getText());
+        viewHolder.textView.setCompoundDrawablesWithIntrinsicBounds(mData.get(i).getDrawable(), null, null, null);
 
         //TODO: selected menu position, change layout accordingly
         if (mSelectedPosition == i || mTouchedPosition == i) {
