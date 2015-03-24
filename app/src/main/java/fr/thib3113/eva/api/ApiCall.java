@@ -75,6 +75,12 @@ public class ApiCall extends AsyncTask<Void, Void, Void> {
     }
 
     @Override
+    protected void onCancelled() {
+        pDialog.hide();
+        super.onCancelled();
+    }
+
+    @Override
     protected void onPreExecute() {
         super.onPreExecute();
 

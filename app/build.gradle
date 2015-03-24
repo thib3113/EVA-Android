@@ -5,7 +5,7 @@ android {
     buildToolsVersion "21.1.2"
 
     defaultConfig {
-        applicationId "thib3113.fr.eva"
+        applicationId "fr.thib3113.eva"
         minSdkVersion 19
         targetSdkVersion 21
         versionCode 1

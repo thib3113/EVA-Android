@@ -1,4 +1,4 @@
-package fr.thib3113.eva;
+package fr.thib3113.eva.api;
 
 import android.provider.Settings;
 
@@ -19,6 +19,8 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
+
+import fr.thib3113.eva.MainActivity;
 
 /**
  * Created by thibaut on 13/03/2015.

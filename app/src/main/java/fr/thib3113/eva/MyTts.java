@@ -38,6 +38,18 @@ public class MyTts implements TextToSpeech.OnInitListener, TextToSpeech.OnUttera
         }
     }
 
+    public void stop(){
+        mTts.stop();
+    }
+
+    public void shutdown(){
+        mTts.shutdown();
+    }
+
+    public static TextToSpeech getmTts() {
+        return mTts;
+    }
+
     public MyTts(Activity a){
         System.out.println("init myTts");
         parent_activity = a;

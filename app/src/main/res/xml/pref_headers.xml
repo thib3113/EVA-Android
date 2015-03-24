@@ -2,13 +2,14 @@
 
     <!-- These settings headers are only used on tablets. -->
 
-    <header android:fragment="fr.thib3113.eva.SettingsActivity$GeneralPreferenceFragment"
+    <header android:fragment="fr.thib3113.eva.fragments.SettingsActivity$GeneralPreferenceFragment"
         android:title="@string/pref_header_general" />
 
-    <header android:fragment="fr.thib3113.eva.SettingsActivity$NotificationPreferenceFragment"
+    <header
+        android:fragment="fr.thib3113.eva.fragments.SettingsActivity$NotificationPreferenceFragment"
         android:title="@string/pref_header_notifications" />
 
-    <header android:fragment="fr.thib3113.eva.SettingsActivity$DataSyncPreferenceFragment"
+    <header android:fragment="fr.thib3113.eva.fragments.SettingsActivity$DataSyncPreferenceFragment"
         android:title="@string/pref_header_data_sync" />
 
 </preference-headers>

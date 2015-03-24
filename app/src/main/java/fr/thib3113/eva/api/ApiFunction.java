@@ -8,8 +8,6 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-import fr.thib3113.eva.ServiceHandler;
-
 /**
  * Created by thibaut on 19/03/2015.
  */
