@@ -8,9 +8,10 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
+import org.apache.http.NameValuePair;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,7 +22,7 @@ import fr.thib3113.eva.MyTts;
  * Created by thibaut on 16/03/2015.
  */
 public class ApiCall extends AsyncTask<Void, Void, Void> {
-    public ArrayList<String> functionList = new ArrayList<String>();
+    public Map<String, List<NameValuePair>> functionList = new HashMap<String ,List<NameValuePair>>();
     public Activity activity = null;
     public String url = null;
 
@@ -40,11 +41,18 @@ public class ApiCall extends AsyncTask<Void, Void, Void> {
     private Map<String, String> result_api;
 
     public ApiCall(MainActivity activity){
-        functionList.add("ping");// put(5, "yes");
         this.setUrl(api_url + api_version);
         this.setActivity(activity);
         this.setTts(activity.tts);
         this.setTts_initialized(activity.tts_initilized);
+    }
+
+    public void addToFunctionQueue(String requete, List<NameValuePair> arguments){
+        functionList.put(requete, arguments);
+    }
+
+    public void addToFunctionQueue(String requete){
+        addToFunctionQueue(requete, null);
     }
 
     public void setTts_initialized(boolean nTts_initialized){
@@ -76,7 +84,9 @@ public class ApiCall extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected void onCancelled() {
-        pDialog.hide();
+        if(pDialog != null){
+            pDialog.hide();
+        }
         super.onCancelled();
     }
 
@@ -108,7 +118,7 @@ public class ApiCall extends AsyncTask<Void, Void, Void> {
 
         // Showing progress dialog
             pDialog = new ProgressDialog(ApiCall.this.activity);
-            pDialog.setMessage("Vérification de l'API");
+            pDialog.setMessage("Discussion avec l'API");
             pDialog.setCancelable(false);
             pDialog.show();
 
@@ -118,7 +128,17 @@ public class ApiCall extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... arg0) {
         // Creating service handler class instance
         ApiFunction a = new ApiFunction(this.url);
-        for (String function:functionList) a.call(this, function);
+//        HashMap<String, HashMap> selects = new HashMap<String, HashMap>();
+//
+//        for(Entry<String, HashMap> entry : selects.entrySet()) {
+//            String key = entry.getKey();
+//            HashMap value = entry.getValue();
+//
+//            // do what you have to do here
+//            // In your case, an other loop.
+//        }
+        for (Map.Entry<String, List<NameValuePair>> function:functionList.entrySet()) result_api = a.call(this, function.getKey(), (List)function.getValue());
+//        HashMap<String, NameValuePair>
 
         return null;
     }
@@ -130,14 +150,18 @@ public class ApiCall extends AsyncTask<Void, Void, Void> {
 
         String out_str = "Erreur inconnue";
         System.out.println(result_api);
-        if(this.version != null) {
-            out_str = "Connection au serveur réussie";
+        if(result_api.get("status") == "true") {
+            out_str = result_api.get("message");
         }
         else {
             if (!isOnline()) {
                 out_str = "vous n'etes pas connecté à internet";
             } else {
-                out_str = "La connection à votre serveur à échoué";
+
+                out_str = "La requète à échoué";
+
+                if(result_api.get("message") != null)
+                    out_str += ", elle à retourné une erreur \""+result_api.get("error_code")+"\", et un message \""+result_api.get("message")+"\"";
             }
         }
 

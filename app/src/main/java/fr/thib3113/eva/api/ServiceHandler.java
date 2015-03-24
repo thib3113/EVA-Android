@@ -70,6 +70,7 @@ public class ServiceHandler {
             HttpEntity httpEntity;
             HttpResponse httpResponse = null;
 
+            System.out.println(url);
             // Checking http request method type
             if (method == POST) {
                 HttpPost httpPost = new HttpPost(url);

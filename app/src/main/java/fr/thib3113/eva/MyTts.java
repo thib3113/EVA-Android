@@ -22,8 +22,6 @@ public class MyTts implements TextToSpeech.OnInitListener, TextToSpeech.OnUttera
 
     public static void speak(String out_str){
 
-        System.out.println("speak 1");
-
         if(initialized){
             if(Build.VERSION.SDK_INT >= 21 ){
                 mTts.speak((CharSequence) out_str, TextToSpeech.QUEUE_ADD, new Bundle(), TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID);
@@ -51,7 +49,6 @@ public class MyTts implements TextToSpeech.OnInitListener, TextToSpeech.OnUttera
     }
 
     public MyTts(Activity a){
-        System.out.println("init myTts");
         parent_activity = a;
         mTts = new TextToSpeech(parent_activity, new TextToSpeech.OnInitListener() {
 
@@ -59,7 +56,7 @@ public class MyTts implements TextToSpeech.OnInitListener, TextToSpeech.OnUttera
             public void onInit(int status) {
                 // TODO Auto-generated method stub
                 if (status == TextToSpeech.SUCCESS) {
-                    int result = mTts.setLanguage(Locale.FRENCH);
+                    int result = mTts.setLanguage(Locale.getDefault());
                     if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
                         String str = "TTs en français n'est pas supporté";
                         MyTts.log(str);

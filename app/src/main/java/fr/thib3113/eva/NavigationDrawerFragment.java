@@ -192,4 +192,6 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
         SharedPreferences sharedPref = ctx.getSharedPreferences(PREFERENCES_FILE, Context.MODE_PRIVATE);
         return sharedPref.getString(settingName, defaultValue);
     }
+
+
 }
