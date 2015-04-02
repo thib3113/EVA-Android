@@ -159,7 +159,9 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        mActionBarDrawerToggle.onConfigurationChanged(newConfig);
+        if(mActionBarDrawerToggle != null){
+            mActionBarDrawerToggle.onConfigurationChanged(newConfig);
+        }
     }
 
     @Override

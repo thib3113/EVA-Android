@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "fr.thib3113.eva"
-        minSdkVersion 19
+        minSdkVersion 11
         targetSdkVersion 21
         versionCode 1
         versionName "1.0"
@@ -24,8 +24,8 @@ dependencies {
     compile 'com.android.support:appcompat-v7:22.0.0'
     compile 'com.android.support:support-v4:22.0.0'
     compile 'com.android.support:recyclerview-v7:22.0.0'
-    compile 'com.getbase:floatingactionbutton:1.8.0'
+//    compile 'com.getbase:floatingactionbutton:1.8.0'
     compile 'com.android.support:cardview-v7:22.0.0'
-    compile 'com.github.gabrielemariotti.cards:cardslib-core:2.0.1'
+//    compile 'com.github.gabrielemariotti.cards:cardslib-core:2.0.1'
     compile 'com.google.android.gms:play-services:7.0.0'
 }

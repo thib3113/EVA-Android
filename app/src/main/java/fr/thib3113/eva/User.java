@@ -18,12 +18,11 @@ public class User {
         return isConnect;
     }
 
-    public void tryToConnect(String username,String password){
+    public void tryToConnect(ApiCall a,String username,String password){
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("user", username));
         params.add(new BasicNameValuePair("pass", password));
         params.add(new BasicNameValuePair("remember_me", "true"));
-        ApiCall a = new ApiCall((MainActivity)MainActivity.getActivity());
         a.addToFunctionQueue("connect", params);
         a.execute();
     }

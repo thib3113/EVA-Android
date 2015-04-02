@@ -9,15 +9,21 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.conn.ConnectTimeoutException;
+import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.cookie.BasicClientCookie;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
+import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.UnknownHostException;
 import java.util.List;
 
 import fr.thib3113.eva.MainActivity;
@@ -30,6 +36,10 @@ public class ServiceHandler {
     static String response = null;
     public final static int GET = 1;
     public final static int POST = 2;
+    public int status_code;
+    public HttpResponse httpResponse = null;
+    public Exception Exception = null;
+
     private String android_id = Settings.Secure.getString(MainActivity.getAppContext().getContentResolver(),
             Settings.Secure.ANDROID_ID);
 
@@ -68,9 +78,8 @@ public class ServiceHandler {
             // http client
             DefaultHttpClient httpClient = new DefaultHttpClient(httpParameters);
             HttpEntity httpEntity;
-            HttpResponse httpResponse = null;
 
-            System.out.println(url);
+//            System.out.println(url);
             // Checking http request method type
             if (method == POST) {
                 HttpPost httpPost = new HttpPost(url);
@@ -89,24 +98,45 @@ public class ServiceHandler {
                     url += "?" + paramString;
                 }
                 HttpGet httpGet = new HttpGet(url);
+                BasicCookieStore cookieStore = new BasicCookieStore();
+                BasicClientCookie cookie = new BasicClientCookie("EVA-COOKIE", "");
+                cookieStore.addCookie(cookie);
+                BasicHttpContext httpContext = new BasicHttpContext();
+//                System.out.println("set cookie");
+                httpContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
 
                 httpGet.setHeader("USER_AGENT", "android|"+android_id);
-                httpResponse = httpClient.execute(httpGet);
+                httpResponse = httpClient.execute(httpGet, httpContext);
 
             }
+            status_code = httpResponse.getStatusLine().getStatusCode();
             httpEntity = httpResponse.getEntity();
             response = EntityUtils.toString(httpEntity);
+            System.out.println(httpResponse.getAllHeaders().toString());
 
         } catch (UnsupportedEncodingException e) {
-            System.out.println("UnsupportedEncodingException");
-            e.printStackTrace();
-        } catch (ClientProtocolException e) {
-            System.out.println("ClientProtocolException");
-            e.printStackTrace();
-        } catch (IOException e) {
-            System.out.println("IOException");
-            e.printStackTrace();
+//            System.out.println("UnsupportedEncodingException");
+            this.Exception = e;
+//            e.printStackTrace();
+        } catch (ConnectTimeoutException e){
+//            System.out.println("ConnectTimeoutException");
+            this.Exception = e;
+//            e.printStackTrace();
+        } catch (UnknownHostException e){
+//            System.out.println("UnknownHostException");
+            this.Exception = e;
+//            e.printStackTrace();
         }
+        catch (ClientProtocolException e) {
+//            System.out.println("ClientProtocolException");
+            this.Exception = e;
+//            e.printStackTrace();
+        } catch (IOException e) {
+//            System.out.println("IOException ");
+            this.Exception = e;
+//            e.printStackTrace();
+        }
+
 
         return response;
 

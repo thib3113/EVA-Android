@@ -6,9 +6,15 @@
     <string name="no_card">No card to see</string>
     <string name="drawer_close">Menu closed</string>
     <string name="action_settings">Settings</string>
-    <string name="dashboard">Dashboard</string>
+    <string name="dashboard" translatable="false">Dashboard</string>
     <string name="vocal">Voice</string>
     <string name="settings">Settings</string>
+    <string name="config">first Time</string>
+
+    <!-- Connection -->
+    <string name="HostNotFound">Host Not Found</string>
+    <string name="ConnectionTimeout">Connection Timeout</string>
+    <string name="checkConfig">Tester la configuration</string>
 
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

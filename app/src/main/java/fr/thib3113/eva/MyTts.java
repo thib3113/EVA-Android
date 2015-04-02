@@ -16,13 +16,13 @@ import java.util.Locale;
  */
 public class MyTts implements TextToSpeech.OnInitListener, TextToSpeech.OnUtteranceCompletedListener{
     private  static TextToSpeech mTts;
-    private  static boolean initialized = false;
+    private  static boolean isInit = false;
     private static Activity parent_activity;
     private static List<String> waiting_list = new ArrayList<String>();
 
     public static void speak(String out_str){
 
-        if(initialized){
+        if(isInit()){
             if(Build.VERSION.SDK_INT >= 21 ){
                 mTts.speak((CharSequence) out_str, TextToSpeech.QUEUE_ADD, new Bundle(), TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID);
             }
@@ -34,6 +34,10 @@ public class MyTts implements TextToSpeech.OnInitListener, TextToSpeech.OnUttera
             Toast.makeText(parent_activity.getApplicationContext(), out_str, Toast.LENGTH_LONG).show();
             waiting_list.add(out_str);
         }
+    }
+
+    public static boolean isInit() {
+        return isInit;
     }
 
     public void stop(){
@@ -63,7 +67,7 @@ public class MyTts implements TextToSpeech.OnInitListener, TextToSpeech.OnUttera
                         Toast.makeText(parent_activity, str, Toast.LENGTH_LONG);
                     }
                     else{
-                        initialized = true;
+                        isInit = true;
                         for (String out_str : waiting_list) {
                             MyTts.speak(out_str); // error speak is not static
                         }

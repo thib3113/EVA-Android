@@ -6,7 +6,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
-import android.widget.Toast;
+import android.os.Handler;
 
 import org.apache.http.NameValuePair;
 import org.json.JSONObject;
@@ -25,26 +25,48 @@ public class ApiCall extends AsyncTask<Void, Void, Void> {
     public Map<String, List<NameValuePair>> functionList = new HashMap<String ,List<NameValuePair>>();
     public Activity activity = null;
     public String url = null;
+    private boolean speak = true;
+    public Handler handler = null;
 
-    public  String api_url = "http://myraspi.thib3113.fr/EVA/api/v";
+    public  String api_url = "api/v";
     public  String api_version = "1";
 
+    public String distantUrl;
+    public String localUrl;
+    public String username;
+    public String passwd;
 
     public String version = null;
     public List<String> Widget;
 
     public JSONObject jsonObj;
     public String str = null;
+    private String progressMessage = null;
     public ProgressDialog pDialog;
     public MyTts tts;
     public boolean tts_initialized;
-    private Map<String, String> result_api;
+    public Map<String, String> result_api;
+    public ApiFunction a;
 
     public ApiCall(MainActivity activity){
         this.setUrl(api_url + api_version);
         this.setActivity(activity);
         this.setTts(activity.tts);
-        this.setTts_initialized(activity.tts_initilized);
+        this.setTts_initialized(activity.tts.isInit());
+    }
+
+    public String formatUrl(String url){
+        //ajout du http au début
+        if(url.substring(0, 7) != "http://"){
+            if(url.substring(0, 8) != "https://"){
+                if(url.substring(0, 2) != "//")
+                    url = "http://"+url;
+                else
+                    url = "http:"+url;
+            }
+        }
+
+        return (url.substring(url.length()-1) == "/")? url : url+"/";
     }
 
     public void addToFunctionQueue(String requete, List<NameValuePair> arguments){
@@ -85,7 +107,7 @@ public class ApiCall extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onCancelled() {
         if(pDialog != null){
-            pDialog.hide();
+            pDialog.dismiss();
         }
         super.onCancelled();
     }
@@ -98,7 +120,7 @@ public class ApiCall extends AsyncTask<Void, Void, Void> {
             if(activity == null)
                 throw new Error();
         } catch (Exception e) {
-            System.out.println("activity is empty");
+//            System.out.println("activity is empty");
             e.printStackTrace();
         }
 
@@ -106,40 +128,37 @@ public class ApiCall extends AsyncTask<Void, Void, Void> {
             if(url == null)
                 throw new Error();
         } catch (Exception e) {
-            System.out.println("url is empty");
+//            System.out.println("url is empty");
             e.printStackTrace();
         }
 
         if(!isOnline()) {
-            Toast.makeText(activity.getApplicationContext(), "Problème de connection internet", Toast.LENGTH_LONG).show();
+            tts.speak("Problème de connection internet");
             this.cancel(true);
             return;
         }
 
         // Showing progress dialog
-            pDialog = new ProgressDialog(ApiCall.this.activity);
-            pDialog.setMessage("Discussion avec l'API");
+            pDialog = new ProgressDialog(this.activity);
+            pDialog.setMessage((this.progressMessage != null)? this.progressMessage :"Discussion avec l'API");
+            this.progressMessage = null; // on remet le message à 0
             pDialog.setCancelable(false);
             pDialog.show();
 
     }
 
+    public void setProgressMessage(String progressMessage) {
+        this.progressMessage = progressMessage;
+    }
+
     @Override
     protected Void doInBackground(Void... arg0) {
-        // Creating service handler class instance
-        ApiFunction a = new ApiFunction(this.url);
-//        HashMap<String, HashMap> selects = new HashMap<String, HashMap>();
-//
-//        for(Entry<String, HashMap> entry : selects.entrySet()) {
-//            String key = entry.getKey();
-//            HashMap value = entry.getValue();
-//
-//            // do what you have to do here
-//            // In your case, an other loop.
-//        }
-        for (Map.Entry<String, List<NameValuePair>> function:functionList.entrySet()) result_api = a.call(this, function.getKey(), (List)function.getValue());
-//        HashMap<String, NameValuePair>
 
+
+        a = new ApiFunction(url, this.activity.getApplicationContext());
+
+        result_api = null;
+        for (Map.Entry<String, List<NameValuePair>> function:this.functionList.entrySet()) result_api = a.call(this, function.getKey(), (List)function.getValue());
         return null;
     }
 
@@ -149,7 +168,9 @@ public class ApiCall extends AsyncTask<Void, Void, Void> {
         pDialog.hide();
 
         String out_str = "Erreur inconnue";
-        System.out.println(result_api);
+//        System.out.println(result_api);
+        int last_status_code = 0;
+
         if(result_api.get("status") == "true") {
             out_str = result_api.get("message");
         }
@@ -157,27 +178,27 @@ public class ApiCall extends AsyncTask<Void, Void, Void> {
             if (!isOnline()) {
                 out_str = "vous n'etes pas connecté à internet";
             } else {
+                if(a.sh.httpResponse != null){
+                    last_status_code = a.sh.httpResponse.getStatusLine().getStatusCode();
+                }
 
                 out_str = "La requète à échoué";
-
-                if(result_api.get("message") != null)
-                    out_str += ", elle à retourné une erreur \""+result_api.get("error_code")+"\", et un message \""+result_api.get("message")+"\"";
+                if(last_status_code >= 300){
+                    out_str += ", elle as retournée un code http "+last_status_code;
+                }
+                else{
+                    if(result_api.get("message") != null)
+                        out_str += ", elle à retournée une erreur \""+result_api.get("error_code")+"\", et un message \""+result_api.get("message")+"\"";
+                }
             }
         }
 
-        tts.speak(out_str);
-//        if(this.tts_initialized){
-//            if(Build.VERSION.SDK_INT >= 21 ){
-//                tts.speak((CharSequence) out_str, TextToSpeech.QUEUE_ADD, new Bundle(), TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID);
-//            }
-//            else{
-//                tts.speak(out_str, TextToSpeech.QUEUE_ADD, null);
-//            }
-//        }
-//        else{
-//            Toast.makeText(activity.getApplicationContext(), out_str, Toast.LENGTH_LONG).show();
-//        }
-//        System.out.println(jsonObj.toString());
+        if(handler == null)
+            tts.speak(out_str);
+        else{
+            handler.sendMessage(handler.obtainMessage());
+        }
+
     }
 
     public Activity getActivity() {
